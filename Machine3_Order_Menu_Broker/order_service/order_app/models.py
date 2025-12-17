@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from menu.models import MenuItem  # importer le modèle MenuItem
+from ..menu_service.menu_app.models import MenuItem  # importer le modèle MenuItem
 
 # ============================================
 # Commande principale

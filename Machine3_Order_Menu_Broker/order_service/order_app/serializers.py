@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Order, OrderItem
-from menu.serializers import MenuItemSerializer
-from menu.models import MenuItem 
+from menu_service.menu_app.serializers import MenuItemSerializer
+from menu_service.menu_app.models import MenuItem 
 
 # OrderItem Serializer
 class OrderItemSerializer(serializers.ModelSerializer):
