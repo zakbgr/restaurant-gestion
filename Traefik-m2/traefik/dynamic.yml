@@ -1,0 +1,195 @@
+# ============================================
+# TRAEFIK DYNAMIC CONFIGURATION
+# Machine 2 - API Gateway
+# ============================================
+
+http:
+  # ============================================
+  # ROUTERS
+  # ============================================
+  routers:
+    # Auth Service Router
+    auth-router:
+      rule: "Host(`api.restaurant.local`) && PathPrefix(`/api/auth`)"
+      service: auth-service
+      entryPoints:
+        - web
+      middlewares:
+        - strip-auth-prefix
+        - rate-limit
+        - compression
+
+    # Menu Service Router
+    menu-router:
+      rule: "Host(`api.restaurant.local`) && PathPrefix(`/api/menu`)"
+      service: menu-service
+      entryPoints:
+        - web
+      middlewares:
+        - strip-menu-prefix
+        - rate-limit
+        - compression
+
+    # Order Service Router
+    order-router:
+      rule: "Host(`api.restaurant.local`) && PathPrefix(`/api/orders`)"
+      service: order-service
+      entryPoints:
+        - web
+      middlewares:
+        - strip-order-prefix
+        - rate-limit
+        - compression
+        - jwt-auth
+
+    # UI Service Router
+    ui-router:
+      rule: "Host(`restaurant.local`) || Host(`www.restaurant.local`)"
+      service: ui-service
+      entryPoints:
+        - web
+      middlewares:
+        - compression
+
+  # ============================================
+  # SERVICES (Manual configuration as backup)
+  # ============================================
+  services:
+    # Auth Service
+    auth-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.103:8001"  # Machine4
+        healthCheck:
+          path: "/health/"
+          interval: "10s"
+          timeout: "3s"
+
+    # Menu Service
+    menu-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.102:8002"  # Machine3
+        healthCheck:
+          path: "/health/"
+          interval: "10s"
+          timeout: "3s"
+
+    # Order Service
+    order-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.102:8003"  # Machine3
+        healthCheck:
+          path: "/health/"
+          interval: "10s"
+          timeout: "3s"
+
+    # UI Service
+    ui-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.104:8004"  # Machine5
+        healthCheck:
+          path: "/health/"
+          interval: "10s"
+          timeout: "3s"
+
+  # ============================================
+  # MIDDLEWARES
+  # ============================================
+  middlewares:
+    # Strip prefixes for routing
+    strip-auth-prefix:
+      stripPrefix:
+        prefixes:
+          - "/api/auth"
+
+    strip-menu-prefix:
+      stripPrefix:
+        prefixes:
+          - "/api/menu"
+
+    strip-order-prefix:
+      stripPrefix:
+        prefixes:
+          - "/api/orders"
+
+    # Rate limiting
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+        period: 1s
+
+    # Compression
+    compression:
+      compress: {}
+
+    # JWT Authentication Middleware (Forward Auth)
+    jwt-auth:
+      forwardAuth:
+        address: "http://192.168.1.103:8001/api/validate-token/"
+        trustForwardHeader: true
+        authResponseHeaders:
+          - "X-User-Id"
+          - "X-User-Email"
+          - "X-User-Role"
+
+    # CORS Headers
+    cors-headers:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        accessControlAllowOriginList:
+          - "http://restaurant.local"
+          - "http://www.restaurant.local"
+        accessControlMaxAge: 100
+        addVaryHeader: true
+        accessControlAllowCredentials: true
+        accessControlAllowHeaders:
+          - "Content-Type"
+          - "Authorization"
+
+    # Security Headers
+    security-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+
+# ============================================
+# TCP ROUTERS (for RabbitMQ management)
+# ============================================
+tcp:
+  routers:
+    rabbitmq-router:
+      rule: "HostSNI(`*`)"
+      service: rabbitmq-service
+      entryPoints:
+        - rabbitmq
+
+  services:
+    rabbitmq-service:
+      loadBalancer:
+        servers:
+          - address: "192.168.1.102:5672"  # Machine3
+
+# ============================================
+# TLS Configuration (optional)
+# ============================================
+# Uncomment for HTTPS
+# tls:
+#   options:
+#     default:
+#       minVersion: VersionTLS12
+#       cipherSuites:
+#         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+#         - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
