@@ -1,0 +1,12 @@
+{
+  "ID": "order-service",
+  "Name": "order-service",
+  "Address": "192.168.1.102",
+  "Port": 8003,
+  "Tags": ["traefik.enable=true", "api.orders"],
+  "Check": {
+    "HTTP": "http://192.168.1.102:8003/health/",
+    "Interval": "10s",
+    "Timeout": "3s"
+  }
+}

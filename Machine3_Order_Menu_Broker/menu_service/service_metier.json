@@ -1,0 +1,12 @@
+{
+  "ID": "menu-service",
+  "Name": "menu-service",
+  "Address": "192.168.1.102",
+  "Port": 8002,
+  "Tags": ["traefik.enable=true", "api.menu"],
+  "Check": {
+    "HTTP": "http://192.168.1.102:8002/health/",
+    "Interval": "10s",
+    "Timeout": "3s"
+  }
+}

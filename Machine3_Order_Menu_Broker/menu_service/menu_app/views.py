@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from .models import Category, MenuItem
 from .serializers import CategorySerializer, MenuItemSerializer
 from .forms import CheckoutForm
-import logging,requests
+import logging
 
 # Import des producers RabbitMQ
 ##from rabbitmq_config import OrderNotificationProducer
@@ -13,7 +13,7 @@ import logging,requests
 logger = logging.getLogger(__name__)
 
 # ============================================
-# API ViewSets (existants)
+# API ViewSets
 # ============================================
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
@@ -26,7 +26,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
 
 
 # ============================================
-# Vues Templates pour les clients
+# Template Views
 # ============================================
 
 def home_view(request):
@@ -129,7 +129,7 @@ def cart_view(request):
 
 
 def checkout_view(request):
-    """Passer la commande - AVEC APPEL API à l'Order Service"""
+    """Passer la commande - AVEC RABBITMQ"""
     cart = request.session.get('cart', {})
     
     if not cart:
@@ -137,7 +137,8 @@ def checkout_view(request):
         return redirect('menu-list')
     
     cart_items = []
-    total = 0
+    total = Decimal('0.00')
+    
     for item_id, quantity in cart.items():
         try:
             menu_item = MenuItem.objects.get(id=item_id, available=True)
@@ -154,53 +155,44 @@ def checkout_view(request):
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
-            # Préparer les données pour l'API Order Service
-            order_data = {
-                'customer_name': form.cleaned_data['customer_name'],
-                'customer_phone': form.cleaned_data['customer_phone'],
-                'customer_email': form.cleaned_data['customer_email'],
-                'address': form.cleaned_data['address'],
-                'items': []
-            }
+            order = Order.objects.create(
+                customer_name=form.cleaned_data['customer_name'],
+                customer_phone=form.cleaned_data['customer_phone'],
+                customer_email=form.cleaned_data['customer_email'],
+                status='pending'
+            )
             
-            # Ajouter les items
             for item_data in cart_items:
-                order_data['items'].append({
-                    'menu_item_id': item_data['menu_item'].id,
-                    'menu_item_name': item_data['menu_item'].name,
-                    'menu_item_price': float(item_data['menu_item'].price),
-                    'quantity': item_data['quantity']
-                })
+                OrderItem.objects.create(
+                    order=order,
+                    menu_item=item_data['menu_item'],
+                    quantity=item_data['quantity']
+                )
+            
+            order.calculate_total()
             
             try:
-                # Appel API à l'Order Service
-                # TODO: Remplacer par l'URL réelle de votre Order Service
-                response = requests.post(
-                    'http://localhost:8001/api/orders/',  # Port de l'order_service
-                    json=order_data,
-                    timeout=5
+                success = OrderNotificationProducer.notify_new_order(
+                    order_id=order.id,
+                    customer_name=order.customer_name,
+                    total_price=order.total_price,
+                    items_count=len(cart_items)
                 )
-                
-                if response.status_code == 201:
-                    order = response.json()
-                    order_id = order['id']
-                    
-                    # Vider le panier
-                    request.session['cart'] = {}
-                    request.session.modified = True
-                    
-                    messages.success(
-                        request, 
-                        f'✓ Commande #{order_id} passée avec succès ! Merci {order["customer_name"]} !'
-                    )
-                    return redirect('order-confirmation', order_id=order_id)
+                if success:
+                    logger.info(f"✅ Message RabbitMQ envoyé pour commande #{order.id}")
                 else:
-                    messages.error(request, 'Erreur lors de la création de la commande.')
-                    logger.error(f"Erreur API Order Service: {response.status_code} - {response.text}")
-                    
-            except requests.exceptions.RequestException as e:
-                messages.error(request, 'Impossible de contacter le service de commandes.')
-                logger.error(f"Erreur connexion Order Service: {e}")
+                    logger.warning(f"⚠️ Échec envoi message RabbitMQ pour commande #{order.id}")
+            except Exception as e:
+                logger.error(f"❌ Erreur RabbitMQ: {e}")
+            
+            request.session['cart'] = {}
+            request.session.modified = True
+            
+            messages.success(
+                request, 
+                f'✓ Commande #{order.id} passée avec succès ! Merci {order.customer_name} !'
+            )
+            return redirect('order-confirmation', order_id=order.id)
     else:
         form = CheckoutForm()
     
@@ -215,24 +207,9 @@ def checkout_view(request):
 
 def order_confirmation_view(request, order_id):
     """Page de confirmation de commande"""
-    try:
-        # Récupérer la commande depuis l'Order Service
-        response = requests.get(
-            f'http://localhost:8001/api/orders/{order_id}/',
-            timeout=5
-        )
-        
-        if response.status_code == 200:
-            order = response.json()
-            context = {
-                'order': order,
-            }
-            return render(request, 'menu/order_confirmation.html', context)
-        else:
-            messages.error(request, 'Commande non trouvée.')
-            return redirect('home')
-            
-    except requests.exceptions.RequestException as e:
-        messages.error(request, 'Impossible de récupérer les détails de la commande.')
-        logger.error(f"Erreur récupération commande: {e}")
-        return redirect('home')
+    order = get_object_or_404(Order, id=order_id)
+    
+    context = {
+        'order': order,
+    }
+    return render(request, 'menu/order_confirmation.html', context)

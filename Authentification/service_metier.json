@@ -1,0 +1,12 @@
+{
+  "ID": "auth-service",
+  "Name": "auth-service",
+  "Address": "192.168.1.103",
+  "Port": 8001,
+  "Tags": ["traefik.enable=true", "api.auth"],
+  "Check": {
+    "HTTP": "http://192.168.1.103:8001/health/",
+    "Interval": "10s",
+    "Timeout": "3s"
+  }
+}
