@@ -22,7 +22,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def str(self):
+    def __str__(self):  # ✅ Corrigé : __str__ au lieu de str
         return f"Commande #{self.id} - {self.customer_name}"
 
     def calculate_total(self):
@@ -56,5 +56,5 @@ class OrderItem(models.Model):
         # Mettre à jour le total de la commande
         self.order.calculate_total()
 
-    def str(self):
+    def __str__(self):  # ✅ Corrigé : __str__ au lieu de str
         return f"{self.quantity} x {self.menu_item_name}"
