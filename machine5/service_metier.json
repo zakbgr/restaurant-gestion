@@ -1,0 +1,10 @@
+{
+  "service": {
+    "name": "machine5-ui",
+    "port": 8000,
+    "check": {
+      "http": "http://localhost:8000/health/",
+      "interval": "10s"
+    }
+  }
+}

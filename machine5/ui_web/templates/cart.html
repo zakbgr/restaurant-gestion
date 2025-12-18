@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cart – 5 Stars Restaurant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Poppins,sans-serif;background:#f6f6f6;color:#222;}
+header{background:#0b0b0b;padding:22px 70px;display:flex;justify-content:space-between;align-items:center;}
+header h1{font-family:'Playfair Display',serif;color:#c9a24d;font-size:28px;}
+nav a{color:#fff;margin-left:30px;text-decoration:none;font-weight:500;position:relative;}
+nav a:after{content:'';position:absolute;width:0;height:2px;background:#c9a24d;left:0;bottom:-6px;transition:.3s;}
+nav a:hover:after{width:100%;}
+.container{max-width:1000px;margin:40px auto;padding:0 20px;}
+h2{font-family:'Playfair Display',serif;font-size:32px;text-align:center;margin-bottom:30px;color:#0b0b0b;}
+.table-wrapper{background:#fff;border-radius:14px;box-shadow:0 15px 35px rgba(0,0,0,0.1);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+th,td{padding:18px 15px;text-align:left;border-bottom:1px solid #eee;}
+th{background:#f8f8f8;font-weight:600;}
+.item-name{font-weight:600;}
+.item-price{color:#c9a24d;font-weight:700;}
+.total{text-align:right;font-weight:bold;margin-top:20px;font-size:18px;}
+.btn{display:inline-block;background:#c9a24d;color:#fff;padding:14px 36px;border-radius:30px;text-decoration:none;font-weight:500;margin-top:20px;transition:.3s;}
+.btn:hover{background:#b18b3d;transform:translateY(-2px);}
+.empty-message{text-align:center;font-size:18px;color:#555;margin-top:40px;}
+@media(max-width:768px){th,td{padding:12px 10px;}.btn{width:100%;text-align:center;}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>⭐ 5 Stars Restaurant</h1>
+<nav>
+<a href="home.html">Home</a>
+<a href="menu.html">Menu</a>
+<a href="cart.html">Cart</a>
+<a href="login.html">Login</a>
+</nav>
+</header>
+
+<div class="container">
+<h2>🛒 Mon Panier</h2>
+
+<div class="table-wrapper">
+<table>
+<tr>
+<th>Produit</th>
+<th>Qté</th>
+<th>Prix</th>
+<th>Total</th>
+</tr>
+<tr>
+<td class="item-name">Wagyu Steak</td>
+<td>1</td>
+<td class="item-price">95 DA</td>
+<td class="item-price">95 DA</td>
+</tr>
+<tr>
+<td class="item-name">Lobster Risotto</td>
+<td>1</td>
+<td class="item-price">68 DA</td>
+<td class="item-price">68 DA</td>
+</tr>
+</table>
+</div>
+
+<p class="total">Total : 163 DA</p>
+<a href="checkout.html" class="btn">Passer au paiement</a>
+</div>
+
+<footer>
+<p>© 2025 5 Stars Restaurant – Luxury Dining Experience</p>
+</footer>
+
+</body>
+</html>

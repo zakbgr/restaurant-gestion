@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Checkout – 5 Stars Restaurant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Poppins;background:#f6f6f6}
+header{background:#0b0b0b;padding:22px 70px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-family:Playfair Display;color:#c9a24d}
+.container{padding:80px 70px}
+.card{background:#fff;padding:40px;border-radius:14px;box-shadow:0 20px 40px rgba(0,0,0,.1);max-width:600px;margin:auto}
+input,select{width:100%;padding:14px;margin-top:12px;border-radius:8px;border:1px solid #ccc}
+.btn{background:#c9a24d;color:#fff;padding:14px 36px;border-radius:30px;border:none;margin-top:20px}
+footer{background:#0b0b0b;color:#aaa;text-align:center;padding:35px;margin-top:80px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>⭐ 5 Stars Restaurant</h1>
+</header>
+
+<section class="container">
+<div class="card">
+<h2>Secure Checkout</h2>
+<form action="order_confirmation.html">
+<input placeholder="Full Name" required>
+<input placeholder="Address" required>
+<select>
+<option>Credit Card</option>
+<option>Cash on Delivery</option>
+</select>
+<button class="btn">Place Order</button>
+</form>
+</div>
+</section>
+
+<footer>
+<p>© 2025 5 Stars Restaurant</p>
+</footer>
+
+</body>
+</html>

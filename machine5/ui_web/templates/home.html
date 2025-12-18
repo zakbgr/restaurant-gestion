@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Home – 5 Stars Restaurant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Poppins;background:#f6f6f6}
+header{background:#0b0b0b;padding:22px 70px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-family:Playfair Display;color:#c9a24d}
+nav a{color:#fff;margin-left:30px;text-decoration:none}
+.hero{
+    height:80vh;
+    background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+    url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0') center/cover;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#fff;
+}
+.hero h1{font-size:60px;font-family:Playfair Display}
+.hero p{font-size:22px;margin:20px 0}
+.btn{background:#c9a24d;color:#fff;padding:14px 36px;border-radius:30px;text-decoration:none}
+.container{padding:80px 70px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.card{background:#fff;padding:30px;border-radius:14px;box-shadow:0 20px 40px rgba(0,0,0,.1)}
+footer{background:#0b0b0b;color:#aaa;text-align:center;padding:35px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>⭐ 5 Stars Restaurant</h1>
+<nav>
+<a href="home.html">Home</a>
+<a href="menu.html">Menu</a>
+<a href="cart.html">Cart</a>
+</nav>
+</header>
+
+<section class="hero">
+<div>
+<h1>Luxury Dining Experience</h1>
+<p>Where taste meets elegance</p>
+<a href="menu.html" class="btn">Discover Menu</a>
+</div>
+</section>
+
+<section class="container">
+<div class="grid">
+<div class="card"><h3>Michelin Chefs</h3><p>World class culinary masters</p></div>
+<div class="card"><h3>Premium Ingredients</h3><p>Selected globally</p></div>
+<div class="card"><h3>Luxury Atmosphere</h3><p>Elegant & calm</p></div>
+</div>
+</section>
+
+<footer>
+<p>© 2025 5 Stars Restaurant</p>
+</footer>
+
+</body>
+</html>

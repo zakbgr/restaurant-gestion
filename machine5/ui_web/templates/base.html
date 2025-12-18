@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>5 Stars Restaurant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:Poppins,sans-serif;
+    background:#f6f6f6;
+    color:#222;
+}
+header{
+    background:#0b0b0b;
+    padding:22px 70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+header h1{
+    font-family:Playfair Display,serif;
+    color:#c9a24d;
+    font-size:28px;
+}
+nav a{
+    color:#fff;
+    margin-left:30px;
+    text-decoration:none;
+    font-weight:500;
+    position:relative;
+}
+nav a:after{
+    content:'';
+    position:absolute;
+    width:0;
+    height:2px;
+    background:#c9a24d;
+    left:0;
+    bottom:-6px;
+    transition:.3s;
+}
+nav a:hover:after{width:100%}
+.container{padding:80px 70px}
+.btn{
+    background:#c9a24d;
+    color:#fff;
+    padding:14px 36px;
+    border-radius:30px;
+    text-decoration:none;
+    display:inline-block;
+    transition:.3s;
+}
+.btn:hover{background:#b18b3d;transform:translateY(-2px)}
+.card{
+    background:#fff;
+    padding:32px;
+    border-radius:14px;
+    box-shadow:0 20px 40px rgba(0,0,0,.1);
+}
+footer{
+    background:#0b0b0b;
+    color:#aaa;
+    text-align:center;
+    padding:35px;
+    margin-top:80px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>⭐ 5 Stars Restaurant</h1>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+<!-- CONTENT -->
+
+<footer>
+    <p>© 2025 5 Stars Restaurant – Luxury Dining Experience</p>
+</footer>
+
+</body>
+</html>
